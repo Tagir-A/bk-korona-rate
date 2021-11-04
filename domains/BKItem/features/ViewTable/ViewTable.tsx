@@ -1,4 +1,5 @@
 import React from 'react'
+import * as Panelbear from "@panelbear/panelbear-js";
 import { DataGrid, GridColumns } from '@mui/x-data-grid';
 
 type BKItem = {
@@ -32,10 +33,18 @@ export const ViewTable = ({ data }: Props) => {
   ];
 
   const rows = data.map((item, i) => ({ ...item, id: i }))
-  console.log('rows', rows)
   return (
     <div style={{ height: 400, width: '100%', maxWidth: 900 }}>
       <DataGrid
+        onCellClick={(params) => {
+          Panelbear.track(`Cell clicked: ${params.formattedValue}`)
+        }}
+        onColumnHeaderClick={(params) => {
+          Panelbear.track(`Column header clicked: ${params.field}`)
+        }}
+        onColumnVisibilityChange={(params) => {
+          Panelbear.track(`Column visibility changed: ${params.field} to ${params.isVisible}`)
+        }}
         rows={rows}
         columns={columns}
         pageSize={50}

@@ -2,6 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SHEETS_ID: string;
+      PANELBEAR_ID: string;
       NODE_ENV: 'development' | 'production';
     }
   }

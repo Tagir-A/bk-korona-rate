@@ -26,7 +26,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 
 const Home: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  console.log(data)
   return (
     <div className={styles.container}>
       <Head>
