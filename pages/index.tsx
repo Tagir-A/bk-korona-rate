@@ -3,13 +3,14 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
+import { ViewTable } from '../domains/BKItem/features/ViewTable/ViewTable';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
-    const response = await axios.get(process.env.SHEETS_ID)
+    const response = await axios.get(process.env.SHEETS_ID, { responseType: 'json' })
     return {
       props: {
-        data: response
+        data: response.data
       }
 
     }
@@ -40,11 +41,10 @@ const Home: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
+          Цены и короны указаны для Белгорода
         </p>
 
-
+        <ViewTable data={data} />
       </main>
 
       <footer className={styles.footer}>
