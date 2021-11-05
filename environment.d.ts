@@ -1,9 +1,9 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      SHEETS_ID: string;
-      PANELBEAR_ID: string;
-      NODE_ENV: 'development' | 'production';
+      SHEETS_ID: string
+      NEXT_PUBLIC_PANELBEAR_ID: string
+      NODE_ENV: "development" | "production"
     }
   }
 }

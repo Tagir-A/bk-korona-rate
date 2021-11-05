@@ -4,6 +4,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { ViewTable } from '../domains/BKItem/features/ViewTable/ViewTable';
+import { SelectRestaurant } from '../domains/Restaurant/features/SelectRestaurant'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
@@ -40,7 +41,7 @@ const Home: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>
         </h1>
 
         <p className={styles.description}>
-          Цены и короны указаны для Белгорода
+          Цены и короны указаны для <SelectRestaurant />
         </p>
 
         <ViewTable data={data} />
