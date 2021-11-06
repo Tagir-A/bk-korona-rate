@@ -21,7 +21,7 @@ export const Layout = ({ cities, selectedRestaurant, onMsg }: Props) => {
 
   return (
     <>
-      <Button variant="text" onClick={() => setPopupState({ type: 'open', cities })}>{cityFrom(selectedRestaurant)}</Button>
+      <Button color='primary' variant="text" onClick={() => setPopupState({ type: 'open', cities })}>{cityFrom(selectedRestaurant)}</Button>
       <Popup state={popupState} onMsg={msg => {
         switch (msg.type) {
           case 'close_clicked':

@@ -1,11 +1,31 @@
 import '../styles/globals.css'
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import { usePanelbear } from "@panelbear/panelbear-nextjs";
 import type { AppProps } from 'next/app'
+import React from 'react';
 
 function MyApp({ Component, pageProps }: AppProps) {
   usePanelbear(process.env.NEXT_PUBLIC_PANELBEAR_ID);
-  return <Component {...pageProps} />
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
+
+
+  return <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <Component {...pageProps} />
+  </ThemeProvider>
 }
 
 export default MyApp
