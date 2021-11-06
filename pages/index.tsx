@@ -42,8 +42,8 @@ const Home: NextPage<{
   cities: { name: string }[],
   e?: Error
 }> = ({ data, cities, e }) => {
-  if (!data) return <>There was an error {e}</>
-  const [state, setState] = useState<State>({ type: 'city_selected', data: data[0] })
+  const [state, setState] = useState<State>(data ? { type: 'city_selected', data: data[0] } : { type: 'error', text: 'Проблема с загрузкой данных' })
+
 
   return (
     <div className={styles.container}>
