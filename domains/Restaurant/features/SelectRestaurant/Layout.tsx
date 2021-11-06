@@ -1,33 +1,41 @@
 import React, { useState } from 'react'
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material'
-import { Restaurant } from '../../Restaurant'
+import { Button } from '@material-ui/core'
+import { cityFrom } from 'lvovich';
+import { Popup, State as PopupState } from './Popup'
+import { nr } from '../../../../utils'
 
 interface Props {
-  restaurants: Restaurant[]
+  selectedRestaurant: string
+  cities: { name: string }[]
+  onMsg: (msg: Msg) => void
 }
 
-export const Layout = ({ restaurants }: Props) => {
-  const [state, setState] = useState(String(restaurants[0].id))
+export type Msg = {
+  type: 'city_selected'
+  city: { name: string }
+}
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setState(event.target.value);
-  };
+
+export const Layout = ({ cities, selectedRestaurant, onMsg }: Props) => {
+  const [popupState, setPopupState] = useState<PopupState>({ type: 'closed' })
 
   return (
-    <FormControl fullWidth>
-      <InputLabel id="demo-simple-select-label">Ресторан</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        value={state}
-        label="Age"
-        onChange={handleChange}
-      >
-        {restaurants.map(restaurant => (
-          <MenuItem key={restaurant.id} value={restaurant.id}>{restaurant.name}</MenuItem>
+    <>
+      <Button variant="text" onClick={() => setPopupState({ type: 'open', cities })}>{cityFrom(selectedRestaurant)}</Button>
+      <Popup state={popupState} onMsg={msg => {
+        switch (msg.type) {
+          case 'close_clicked':
+            setPopupState({ type: 'closed' })
+            break;
+          case 'city_selected':
+            setPopupState({ type: 'closed' })
+            onMsg(msg)
+            break
 
-        ))}
-      </Select>
-    </FormControl>
+          default:
+            nr(msg)
+        }
+      }} />
+    </>
   )
 }

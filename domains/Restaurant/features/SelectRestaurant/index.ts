@@ -1,1 +1,1 @@
-export { DataLoader as SelectRestaurant } from "./DataLoader"
+export { Layout as SelectRestaurant } from "./Layout"

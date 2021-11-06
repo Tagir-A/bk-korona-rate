@@ -1,13 +1,9 @@
 import React from 'react'
 import * as Panelbear from "@panelbear/panelbear-js";
 import { DataGrid, GridColumns } from '@mui/x-data-grid';
+import { BKItem } from '../../BKItem';
 
-type BKItem = {
-  title: string,
-  price: number,
-  koronaPrice: number,
-  rate: string
-}
+
 
 interface Props {
   data: BKItem[]
@@ -48,7 +44,7 @@ export const ViewTable = ({ data }: Props) => {
         rows={rows}
         columns={columns}
         pageSize={50}
-        rowsPerPageOptions={[5]}
+        rowsPerPageOptions={[50]}
       />
     </div>
   );
