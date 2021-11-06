@@ -4,13 +4,23 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { ViewTable } from '../domains/BKItem/features/ViewTable/ViewTable';
+import { SelectRestaurant } from '../domains/Restaurant/features/SelectRestaurant'
+import { useState } from 'react'
+import { BKItem } from '../domains/BKItem'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   try {
-    const response = await axios.get(process.env.SHEETS_ID, { responseType: 'json' })
+    const cities: { name: string }[] = await axios.get(encodeURI(`/tabs/Города`), { baseURL: process.env.SHEETS_ID }).then(response => response.data)
+    const data = await Promise.all(cities.map(async city => {
+      return await axios.get(encodeURI(`/tabs/${city.name}`), { baseURL: process.env.SHEETS_ID }).then(response => ({
+        name: city.name,
+        data: response.data
+      }))
+    }))
     return {
       props: {
-        data: response.data
+        data,
+        cities
       }
 
     }
@@ -18,14 +28,23 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return {
       // notFound: true,
       props: {
-        data: `${e}`
+        e: `${e} ${`${process.env.SHEETS_ID}/tabs/Города`}`
       }
     }
   }
 }
 
+type State = { type: 'city_selected', data: { name: string, data: BKItem[] } } | { type: 'error', text: string }
 
-const Home: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
+
+const Home: NextPage<{
+  data: { name: string, data: BKItem[] }[],
+  cities: { name: string }[],
+  e?: Error
+}> = ({ data, cities, e }) => {
+  const [state, setState] = useState<State>(data ? { type: 'city_selected', data: data[0] } : { type: 'error', text: 'Проблема с загрузкой данных' })
+
+
   return (
     <div className={styles.container}>
       <Head>
@@ -39,11 +58,58 @@ const Home: NextPage = ({ data }: InferGetStaticPropsType<typeof getStaticProps>
           Найдите самые выгодные предложения в БК
         </h1>
 
-        <p className={styles.description}>
-          Цены и короны указаны для Белгорода
-        </p>
+        {(() => {
+          switch (state.type) {
+            case 'city_selected':
+              return <>
+                <p className={styles.description}>
+                  Цены и короны указаны для <SelectRestaurant selectedRestaurant={state.data.name} cities={cities} onMsg={(msg) => {
+                    switch (msg.type) {
+                      case 'city_selected':
+                        const selectedCityData = data.find(item => item.name === msg.city.name)
+                        if (selectedCityData) {
+                          setState({ type: 'city_selected', data: selectedCityData })
+                        }
+                        if (!selectedCityData) {
+                          setState({ type: 'error', text: 'Выбран неверный город' })
+                        }
+                        break;
 
-        <ViewTable data={data} />
+                      default:
+                        break;
+                    }
+                  }} />
+                </p>
+
+                <ViewTable data={state.data.data} />
+              </>
+            case 'error':
+              return <>
+                <p className={styles.description}>
+                  <SelectRestaurant selectedRestaurant={state.text} cities={cities} onMsg={(msg) => {
+                    switch (msg.type) {
+                      case 'city_selected':
+                        const selectedCityData = data.find(item => item.name === msg.city.name)
+                        if (selectedCityData) {
+                          setState({ type: 'city_selected', data: selectedCityData })
+                        }
+                        if (!selectedCityData) {
+                          setState({ type: 'error', text: 'Выбран неверный город' })
+                        }
+                        break;
+
+                      default:
+                        break;
+                    }
+                  }} />
+                </p></>
+
+            default:
+              break;
+          }
+        })()}
+
+
       </main>
 
       <footer className={styles.footer}>
