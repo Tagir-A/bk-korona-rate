@@ -6,6 +6,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { usePanelbear } from "@panelbear/panelbear-nextjs";
 import type { AppProps } from 'next/app'
 import React from 'react';
+import { BasePageLayout } from '../ui/BasePageLayout';
 
 function MyApp({ Component, pageProps }: AppProps) {
   usePanelbear(process.env.NEXT_PUBLIC_PANELBEAR_ID);
@@ -24,7 +25,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return <ThemeProvider theme={theme}>
     <CssBaseline />
-    <Component {...pageProps} />
+    <BasePageLayout>
+      <Component {...pageProps} />
+    </BasePageLayout>
   </ThemeProvider>
 }
 

@@ -1,15 +1,13 @@
-import axios from 'axios'
 import type { GetStaticProps, NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import { ViewTable } from '../domains/BKItem/features/ViewTable/ViewTable';
 import { SelectRestaurant } from '../domains/Restaurant/features/SelectRestaurant'
 import React, { useState } from 'react'
 import { BKItem } from '../domains/BKItem'
 import { nr } from '../utils'
-import Link from '../ui/Link'
 import { createClient, PostgrestError } from '@supabase/supabase-js'
+import { ViewList } from '../domains/BKItem/features/ViewList/ViewList';
+import { Box, Container, Typography } from '@mui/material';
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
@@ -59,23 +57,28 @@ const Home: NextPage<{
 
 
   return (
-    <div className={styles.container}>
+    < >
       <Head>
         <title>Курс БК корон</title>
         <meta name="description" content="Найдите самые выгодные предложения из БК" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Найдите самые выгодные предложения в БК
-        </h1>
+      <Container>
+        <Box sx={{ mt: 2 }} />
+        <Typography variant='body1' component='h4' >
+          В БК есть программа лояльности и валюта — "Короны".
+        </Typography>
+        <Typography variant='body1' component='h4' >
+          Однако разные предложения имеют разную цену в рублях.
+          Благодаря таблице, наглядно видно какие предложения самые выгодные.
+        </Typography>
 
         {(() => {
           switch (state.type) {
             case 'city_selected':
               return <>
-                <p className={styles.description}>
+                <p >
                   Цены и короны указаны для <SelectRestaurant selectedRestaurant={state.data.name} cities={cities} onMsg={(msg) => {
                     switch (msg.type) {
                       case 'city_selected':
@@ -95,10 +98,11 @@ const Home: NextPage<{
                 </p>
 
                 <ViewTable data={state.data.data} />
+                {/* <ViewList data={state.data.data} /> */}
               </>
             case 'error':
               return <>
-                <p className={styles.description}>
+                <p >
                   <SelectRestaurant selectedRestaurant={state.text} cities={cities} onMsg={(msg) => {
                     switch (msg.type) {
                       case 'city_selected':
@@ -117,7 +121,7 @@ const Home: NextPage<{
                   }} />
                 </p></>
             case 'loading_error':
-              return <p className={styles.description}>
+              return <p >
                 Произошла ошибка при загрузке данных
               </p>
             default:
@@ -126,13 +130,8 @@ const Home: NextPage<{
         })()}
 
 
-      </main>
-
-      <footer className={styles.footer}>
-        <Link href='/about'>О сайте</Link>
-        <Image src="/made-in-russia-sign-ru.png" alt='Знак "Сделано в России"' width={233} height={70} />
-      </footer>
-    </div>
+      </Container>
+    </>
   )
 }
 
