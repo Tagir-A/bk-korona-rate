@@ -12,7 +12,7 @@ interface Props {
 export const ViewTable = ({ data }: Props) => {
   const columns: GridColumns = [
     { field: 'id', headerName: 'ID', hide: true },
-    { field: 'title', headerName: 'Название', flex: 200 },
+    { field: 'title', headerName: 'Название', flex: 100 },
     { field: 'price', headerName: 'Цена в ₽', type: 'number', flex: 100 },
     {
       field: 'koronaPrice',
