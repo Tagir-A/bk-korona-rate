@@ -3,6 +3,8 @@ declare global {
     interface ProcessEnv {
       SHEETS_ID: string
       NEXT_PUBLIC_PANELBEAR_ID: string
+      DB_KEY: string
+      DB_URL: string
       NODE_ENV: "development" | "production"
     }
   }

@@ -9,20 +9,30 @@ import React, { useState } from 'react'
 import { BKItem } from '../domains/BKItem'
 import { nr } from '../utils'
 import Link from '../ui/Link'
+import { createClient, PostgrestError } from '@supabase/supabase-js'
 
 export const getStaticProps: GetStaticProps = async (context) => {
+  const supabase = createClient(process.env.DB_URL, process.env.DB_KEY);
+
   try {
-    const cities: { name: string }[] = await axios.get(encodeURI(`/tabs/Города`), { baseURL: process.env.SHEETS_ID }).then(response => response.data)
+    let { data: cities, error }: { data: { name: string }[] | null, error: PostgrestError | null } = await supabase
+      .from('cities')
+      .select('*')
+    if (!cities) throw new Error('no cities loaded')
+    if (error) throw new Error(error.message)
     const data = await Promise.all(cities.map(async city => {
-      return await axios.get(encodeURI(`/tabs/${city.name}`), { baseURL: process.env.SHEETS_ID }).then(response => ({
-        name: city.name,
-        data: response.data
-      }))
+      return await supabase
+        .from(city.name)
+        .select('*').then(response => ({
+          name: city.name,
+          data: response.data
+        }))
     }))
+
     return {
       props: {
         data,
-        cities
+        cities,
       }
 
     }
@@ -30,7 +40,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return {
       // notFound: true,
       props: {
-        e: `${e} ${`${process.env.SHEETS_ID}/tabs/Города`}`
+        e: `${e}`
       }
     }
   }
@@ -44,7 +54,8 @@ const Home: NextPage<{
   cities: { name: string }[],
   e?: Error
 }> = ({ data, cities, e }) => {
-  const [state, setState] = useState<State>(data ? { type: 'city_selected', data: data[0] } : { type: 'loading_error', text: 'Проблема с загрузкой данных' })
+
+  const [state, setState] = useState<State>(data && data[0] && !e ? { type: 'city_selected', data: data[0] } : { type: 'loading_error', text: 'Проблема с загрузкой данных' })
 
 
   return (
