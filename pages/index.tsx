@@ -67,7 +67,7 @@ const Home: NextPage<{
       <Container>
         <Box sx={{ mt: 2 }} />
         <Typography variant='body1' component='h4' >
-          В БК есть программа лояльности и валюта — "Короны".
+          В БК есть программа лояльности и валюта — &quot;Короны&quot;.
         </Typography>
         <Typography variant='body1' component='h4' >
           Однако разные предложения имеют разную цену в рублях.
