@@ -6,21 +6,24 @@ import { NextLinkComposed } from '../ui/Link'
 import { DonateCard } from '../ui/DonateCard'
 import { DonateMobile } from '../ui/DonateMobile'
 import { DonateWallet } from '../ui/DonateWallet'
+import { Container } from '@mui/material'
 
 
 
 const About: NextPage = () => {
   return (
-    <div >
+    < >
       <Head>
         <title>О сайте</title>
         <meta name="description" content="Небольшое пояснение что этот сайт из себя представляет и зачем" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main >
-        <h1 >
+      <Container maxWidth='md'>
+        <Box sx={{ mt: 2 }} />
+        <Typography variant='h2' component='h1' >
           О сайте
-        </h1>
+        </Typography>
+        <Box sx={{ mt: 2 }} />
         <Box maxWidth={700}>
           <Typography>
             Всем привет! Я и моя сестра решили сделать этот сайт, чтобы немного отвлечься.
@@ -30,6 +33,8 @@ const About: NextPage = () => {
           <Typography>
             Если вы хотите поддержать этот проект или просто оплатить кофе студентке — ниже кнопки для доната.
           </Typography>
+          <Box sx={{ mt: 2 }} />
+
           <DonateCard />
           <DonateMobile />
           <DonateWallet />
@@ -40,8 +45,8 @@ const About: NextPage = () => {
           <Button component={NextLinkComposed} to='/' color='primary' variant="contained">На главную</Button>
         </Box>
 
-      </main>
-    </div>
+      </Container>
+    </>
   )
 }
 

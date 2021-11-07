@@ -64,7 +64,7 @@ const Home: NextPage<{
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Container>
+      <Container maxWidth='md'>
         <Box sx={{ mt: 2 }} />
         <Typography variant='body1' component='h4' >
           В БК есть программа лояльности и валюта — &quot;Короны&quot;.
